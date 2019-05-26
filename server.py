@@ -35,22 +35,22 @@ class Server():
         client_sock = self.connections[client_num]["Socket"]
         data_size = int(client_sock.recv(self.headerSize).strip())
 
-        if data_size <= 10:
+        if data_size <= self.headerSize:
             data += client_sock.recv(data_size)
         else:
-            if data_size%10 == 0:
-                num_of_packets = int(data_size/10)
+            if data_size%self.headerSize == 0:
+                num_of_packets = int(data_size/self.headerSize)
                 #receiving the packets
                 for i in range(num_of_packets):
-                    data += client_sock.recv(10)
+                    data += client_sock.recv(self.headerSize)
             else:
                 #getting the size of last packet which is less than 10
-                last_packet_len = data_size%10
+                last_packet_len = data_size%self.headerSize
                 #getting the number of packets whose size is equal to 10
-                num_of_packets = int((data_size - last_packet_len)/10)
+                num_of_packets = int((data_size - last_packet_len)/self.headerSize)
                 #receiving packets whose size=10
                 for i in range(num_of_packets):
-                    data += client_sock.recv(10)
+                    data += client_sock.recv(self.headerSize)
                 #receiving the remaining packet
                 data += client_sock.recv(last_packet_len)
         #returning the data back to its original form
