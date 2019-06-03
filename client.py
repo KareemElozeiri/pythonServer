@@ -4,6 +4,8 @@ import pickle
 class Client():
     def __init__(self,target_ip,target_port):
         self.sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+        #this line is for the reusablility of the client addr in case of shutting down
+        self.sock.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
         self.target = (target_ip,target_port)
         self.sock.connect(self.target)
         self.headerSize = 10

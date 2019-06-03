@@ -4,6 +4,8 @@ import pickle
 class Server():
     def __init__(self,port):
         self.sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+        #this line to make the address of server reusable in case of shutting down
+        self.sock.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
         #list to store clients(sockets and addresses)
         self.connections = []
         self.headerSize = 10
@@ -18,7 +20,7 @@ class Server():
         client_socket , client_addr = self.sock.accept()
         client = {"Socket":client_socket,"address":client_addr}
         self.connections.append(client)
-        print(f"Server accepted connection from {client_addr[0]}:{client_addr[1]}...")
+        print(f"\nServer accepted connection from {client_addr[0]}:{client_addr[1]}...")
 
     def send_data(self,client_num,data):
         #turning the data into bytes
